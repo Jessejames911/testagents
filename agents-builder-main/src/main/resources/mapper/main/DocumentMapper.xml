@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.DocumentMapper">
+
+    <select id="getVoPage" resultType="com.agents.builder.main.domain.vo.DocumentVo">
+        select d.* ,
+               (select count(*) from paragraph p where document_id = d.id) as paragraph_count,
+               (select sum(char_length(content)) from paragraph where document_id = d.id) as charLength
+        from document d
+            ${ew.customSqlSegment}
+    </select>
+</mapper>
