@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.DatasetMapper">
+
+    <select id="getVoPage" resultType="com.agents.builder.main.domain.vo.DatasetVo">
+        select d.* ,
+               (select count(*) from document where dataset_id = d.id) as document_count,
+               (select sum(char_length(content)) from paragraph where dataset_id = d.id) as charLength,
+               (select count(*) from application_dataset_mapping where dataset_id = d.id) as application_mapping_count
+        from dataset d
+            ${ew.customSqlSegment}
+    </select>
+</mapper>

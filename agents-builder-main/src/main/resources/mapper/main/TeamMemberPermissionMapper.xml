@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.TeamMemberPermissionMapper">
+
+    <select id="getRootInfos" resultType="com.agents.builder.main.domain.vo.TeamMemberPermissionVo">
+        SELECT app_or_dataset.*,
+               team_member_permission.operate as operate_str
+        FROM (SELECT id,
+                     name,
+                     'DATASET' AS type,
+                     create_by as user_id
+              FROM dataset
+              WHERE create_by = #{userId}
+              UNION
+              SELECT id,
+                     name,
+                     'APPLICATION' AS type,
+                     create_by     as user_id
+              FROM application
+              WHERE create_by = #{userId}) app_or_dataset
+                 LEFT JOIN (SELECT * FROM team_member_permission WHERE member_id = #{userId}) team_member_permission
+                           ON team_member_permission.target = app_or_dataset.id
+    </select>
+    <select id="getUserInfos" resultType="com.agents.builder.main.domain.vo.TeamMemberPermissionVo">
+        SELECT app_or_dataset.*,
+               team_member_permission.member_id,
+               team_member_permission.operate as operate_str
+        FROM (SELECT id,
+                     name,
+                     'DATASET' AS type,
+                     create_by as user_id
+              FROM dataset
+              where create_by = #{teamId}
+              UNION
+              SELECT id,
+                     name,
+                     'APPLICATION' AS type,
+                     create_by     as user_id
+              FROM application
+              where create_by = #{teamId}) app_or_dataset
+                 LEFT JOIN (SELECT * FROM team_member_permission WHERE member_id = #{userId}) team_member_permission
+                           ON team_member_permission.target = app_or_dataset.id
+    </select>
+    <select id="getUserMainTargetPermission" resultType="com.agents.builder.main.domain.vo.TeamMemberPermissionVo">
+        (
+            select
+                tmp.target as id,
+                tmp.auth_target_type,
+                tmp.operate as operate_str
+            from
+                team_member_permission tmp
+                    left join team_member tm on
+                    tmp.member_id = tm.id
+            where
+                tm.user_id = #{userId}
+              and tmp.auth_target_type = #{targetType}
+        )
+        union
+        (
+            select
+                id,
+                'DATASET' as auth_target_type,
+                '{"USE":true,"MANAGE":true}' as operate_str
+            from
+                dataset
+            where
+                create_by = #{userId}
+        )
+        union
+        (
+            select
+                id,
+                'APPLICATION' as auth_target_type,
+                '{"USE":true,"MANAGE":true}' as operate_str
+            from
+                application
+            where
+                create_by = #{userId}
+        );
+
+    </select>
+    <select id="getUserBaseTargetPermission" resultType="com.agents.builder.main.domain.vo.TeamMemberPermissionVo">
+        select id,create_by as user_id from model where create_by = #{userId} or permission_type = 'PUBLIC'
+        union
+        select id,create_by as user_id from function_lib where create_by = #{userId} or permission_type = 'PUBLIC'
+    </select>
+    <select id="getUserMembersPermission" resultType="com.agents.builder.main.domain.vo.TeamMemberPermissionVo">
+        (
+        select tmp.auth_target_type,tmp.target,tmp.operate as operate_str from team_member_permission tmp
+        where member_id in
+        <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
+            #{memberId}
+        </foreach>
+        )
+        union
+        (
+            select 'DATASET' as auth_target_type,id as target,'{"USE":true,"MANAGE":true}' as operate_str from dataset where create_by = #{userId}
+        )
+        union
+        (
+            select 'APPLICATION' as auth_target_type,id as target,'{"USE":true,"MANAGE":true}' as operate_str from application where create_by = #{userId}
+        )
+
+    </select>
+</mapper>

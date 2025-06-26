@@ -1,0 +1,13 @@
+com.agents.builder.common.web.config.CaptchaConfig
+com.agents.builder.common.web.config.FilterConfig
+com.agents.builder.common.web.config.ResourcesConfig
+com.agents.builder.common.web.config.UndertowConfig
+com.agents.builder.common.web.handler.GlobalExceptionHandler
+com.agents.builder.common.web.config.RateLimiterConfig
+# com.agents.builder.common.web.config.IdempotentConfig
+com.agents.builder.common.web.aspect.LogAspect
+# com.agents.builder.common.web.aspect.RepeatSubmitAspect
+com.agents.builder.common.web.handler.AllUrlHandler
+com.agents.builder.common.web.config.SecurityConfig
+
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.ApplicationChatMapper">
+
+    <select id="getVoPage" resultType="com.agents.builder.main.domain.vo.ApplicationChatVo">
+        select c.*,c.abstract as abstract_name ,
+               (select count(*) from application_chat_record cr where chat_id = c.id) as chat_record_count,
+               (select count(*) from application_chat_record where chat_id = c.id and vote_status = 0) as star_num,
+               (select count(*) from application_chat_record where chat_id = c.id and vote_status = 1) as trample_num,
+               (select count(*) from application_chat_record where chat_id = c.id and improve_paragraph_id_list is not null) as mark_sum
+        from application_chat c
+            ${ew.customSqlSegment}
+    </select>
+</mapper>

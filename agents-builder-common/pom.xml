@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>AgentsBuilder</artifactId>
+        <groupId>com.agents.builder</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agents-builder-common</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>agents-builder-common-core</module>
+        <module>agents-builder-common-redis</module>
+        <module>agents-builder-common-web</module>
+        <module>agents-builder-common-mail</module>
+        <module>agents-builder-common-satoken</module>
+        <module>agents-builder-common-mybatis</module>
+        <module>agents-builder-common-rocketMQ</module>
+        <module>agents-builder-common-ai</module>
+        <module>agents-builder-common-script</module>
+        <module>agents-builder-common-doc</module>
+        <module>agents-builder-common-oss</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+</project>

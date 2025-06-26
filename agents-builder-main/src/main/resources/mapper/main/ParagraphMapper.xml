@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.ParagraphMapper">
+
+    <select id="selectVoByIds" resultType="com.agents.builder.main.domain.vo.ParagraphVo">
+        select p.*,ds.name as dataset_name,doc.name as document_name from paragraph p
+        left join dataset ds on p.dataset_id = ds.id
+        left join document doc on p.document_id = doc.id
+        where p.id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="match" resultType="com.agents.builder.main.domain.vo.ParagraphVo">
+        select p.*, match (content) against(#{keywords}) as similarity
+        from paragraph p
+        where match (content) against(#{keywords})
+        and dataset_id in
+        <foreach collection="datasetIds" item="datasetId" index="index" open="(" close=")" separator=",">
+            #{datasetId}
+        </foreach>
+        having similarity >= #{similarity}
+        ORDER BY similarity DESC limit #{topN};
+    </select>
+</mapper>

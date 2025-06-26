@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.ProblemMapper">
+
+    <select id="selectProblemByParagraphIds" resultType="com.agents.builder.main.domain.bo.ProblemBo">
+        select pgm.id as mapping_id,pgm.paragraph_id,p.* from problem_paragraph_mapping pgm
+        inner join problem p on pgm.problem_id = p.id
+        where pgm.paragraph_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getVoPage" resultType="com.agents.builder.main.domain.vo.ProblemVo">
+        select p.*,
+               (select count(*) from  problem_paragraph_mapping pgm where p.id = pgm.problem_id) as paragraph_count
+        from problem p
+         ${ew.customSqlSegment}
+    </select>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agents.builder.main.mapper.TeamMemberMapper">
+
+    <select id="getTeamMembers" resultType="com.agents.builder.main.domain.vo.TeamMemberVo">
+        select tm.*,u.username,u.email from team_member tm
+        left join user u on tm.user_id = u.id
+        where tm.team_id = #{teamId}
+    </select>
+</mapper>
